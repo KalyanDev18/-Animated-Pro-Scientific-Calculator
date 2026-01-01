@@ -4,9 +4,9 @@ A high-performance, interactive scientific calculator designed for professionals
 Built to eliminate visibility issues in dark UIs using a high-contrast, safety-focused color palette and a clean monospaced interface.
 
 ---
-## 🔗 Live Demo  
-👉 **Try it here:**  
-https://<your-username>.https://animated-pro-scientific-calculator.netlify.app/
+## 🔗 Live Demo
+👉[ (https://animated-pro-scientific-calculator.netlify.app/)
+
 
 
 
