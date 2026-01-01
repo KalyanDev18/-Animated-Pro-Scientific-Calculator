@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Pro Scientific Calculator | Kalyan dev</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0a0a0c;
+            --calc-surface: rgba(30, 30, 30, 0.9);
+            --display-bg: #000000;
+            --text-primary: #ffffff;
+            --accent-orange: #ff9f0a;
+            --accent-blue: #5eacff;
+            --btn-bg: #2c2c2e;
+            --btn-active: #3a3a3c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto Mono', monospace; }
+
+        body {
+            background-color: var(--bg-body);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevent scrollbars from animation */
+            position: relative;
+        }
+
+        /* --- Animated Background Canvas --- */
+        #bg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place behind calculator */
+        }
+
+        .calculator {
+            width: 100%;
+            max-width: 360px;
+            background: var(--calc-surface);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            border: 1px solid #444;
+            z-index: 10;
+        }
+
+        .display-container {
+            margin-bottom: 20px;
+            text-align: right;
+            padding: 15px;
+            background: var(--display-bg);
+            border-radius: 8px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            border: 1px solid #333;
+        }
+
+        #history { color: var(--accent-blue); font-size: 0.9rem; margin-bottom: 8px; min-height: 1.2rem; }
+        #result { color: var(--text-primary); font-size: 2.2rem; font-weight: 700; }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            background: var(--btn-bg);
+            color: var(--text-primary);
+            padding: 15px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-size: 1.1rem;
+        }
+
+        button:hover { background: var(--btn-active); border: 1px solid #555; }
+        button:active { transform: scale(0.92); }
+
+        .operator { color: var(--accent-orange); font-weight: 700; }
+        .function { color: var(--accent-blue); background: #252a30; }
+        .ac { color: #ff453a; }
+        .equals { background: var(--accent-orange); color: #000; font-weight: 700; }
+
+    </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="calculator">
+    <div class="display-container">
+        <div id="history"></div>
+        <div id="result">0</div>
+    </div>
+
+    <div class="buttons">
+        <button class="function" onclick="appendFunction('sin')">sin</button>
+        <button class="function" onclick="appendFunction('cos')">cos</button>
+        <button class="function" onclick="appendFunction('tan')">tan</button>
+        <button class="ac" onclick="clearDisplay()">AC</button>
+
+        <button class="function" onclick="appendFunction('log')">log</button>
+        <button class="function" onclick="appendFunction('ln')">ln</button>
+        <button class="function" onclick="appendOperator('(')">(</button>
+        <button class="function" onclick="appendOperator(')')">)</button>
+
+        <button class="function" onclick="appendFunction('sqrt')">√</button>
+        <button class="function" onclick="appendOperator('^')">xʸ</button>
+        <button class="function" onclick="appendFactorial()">n!</button>
+        <button class="operator" onclick="deleteChar()">DEL</button>
+
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        <button class="operator" onclick="appendOperator('/')">÷</button>
+
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button class="operator" onclick="appendOperator('*')">×</button>
+
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button class="operator" onclick="appendOperator('-')">−</button>
+
+        <button onclick="appendNumber('0')">0</button>
+        <button onclick="appendNumber('.')">.</button>
+        <button class="equals" onclick="calculate()">=</button>
+        <button class="operator" onclick="appendOperator('+')">+</button>
+    </div>
+</div>
+
+<script>
+    // --- Background Animation Logic ---
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function initCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 1;
+            this.speedX = Math.random() * 1 - 0.5;
+            this.speedY = Math.random() * 1 - 0.5;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.x > canvas.width) this.x = 0;
+            if (this.x < 0) this.x = canvas.width;
+            if (this.y > canvas.height) this.y = 0;
+            if (this.y < 0) this.y = canvas.height;
+        }
+        draw() {
+            ctx.fillStyle = 'rgba(94, 172, 255, 0.3)';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function createParticles() {
+        particles = [];
+        for (let i = 0; i < 80; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', initCanvas);
+    initCanvas();
+    createParticles();
+    animate();
+
+    // --- Calculator Logic ---
+    const historyScreen = document.getElementById('history');
+    const resultScreen = document.getElementById('result');
+    let currentInput = "";
+    let calculated = false;
+
+    function updateDisplay() {
+        resultScreen.innerText = currentInput.replace(/\*/g, '×').replace(/\//g, '÷') || "0";
+    }
+
+    function appendNumber(num) {
+        if (calculated) { currentInput = ""; calculated = false; }
+        if (currentInput === "0" && num !== ".") currentInput = "";
+        currentInput += num;
+        updateDisplay();
+    }
+
+    function appendOperator(op) {
+        calculated = false;
+        const last = currentInput.slice(-1);
+        if (['+', '-', '*', '/', '^'].includes(last)) {
+            currentInput = currentInput.slice(0, -1) + op;
+        } else {
+            currentInput += op;
+        }
+        updateDisplay();
+    }
+
+    function appendFunction(f) {
+        calculated = false;
+        currentInput += f + "(";
+        updateDisplay();
+    }
+
+    function appendFactorial() {
+        calculated = false;
+        currentInput += "!";
+        updateDisplay();
+    }
+
+    function clearDisplay() {
+        currentInput = "";
+        historyScreen.innerText = "";
+        resultScreen.innerText = "0";
+    }
+
+    function deleteChar() {
+        currentInput = currentInput.slice(0, -1);
+        updateDisplay();
+    }
+
+    function calculate() {
+        try {
+            let expr = currentInput.replace(/sin/g, 'Math.sin')
+                                   .replace(/cos/g, 'Math.cos')
+                                   .replace(/tan/g, 'Math.tan')
+                                   .replace(/log/g, 'Math.log10')
+                                   .replace(/ln/g, 'Math.log')
+                                   .replace(/sqrt/g, 'Math.sqrt')
+                                   .replace(/\^/g, '**')
+                                   .replace(/(\d+)!/g, (m, n) => {
+                                       let r = 1;
+                                       for(let i=1; i<=n; i++) r *= i;
+                                       return r;
+                                   });
+            let res = eval(expr);
+            historyScreen.innerText = currentInput.replace(/\*/g, '×').replace(/\//g, '÷') + " =";
+            currentInput = (Math.round(res * 1000000) / 1000000).toString();
+            resultScreen.innerText = currentInput;
+            calculated = true;
+        } catch {
+            resultScreen.innerText = "Error";
+            currentInput = "";
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (!isNaN(e.key)) appendNumber(e.key);
+        if (['+', '-', '*', '/'].includes(e.key)) appendOperator(e.key);
+        if (e.key === 'Enter') { e.preventDefault(); calculate(); }
+        if (e.key === 'Backspace') deleteChar();
+        if (e.key === 'Escape') clearDisplay();
+    });
+</script>
+</body>
+</html>
