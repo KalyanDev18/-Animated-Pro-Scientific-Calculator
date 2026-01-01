@@ -1,34 +1,52 @@
 # 🌌 Pro-Logic Scientific Calculator
 
-A high-performance, interactive scientific calculator designed for professionals who value both aesthetics and precision. This application solves the common "visibility issue" in dark-themed tools by using a high-contrast safety color palette and a clean, monospaced interface.
+A high-performance, interactive scientific calculator designed for professionals who value both aesthetics and precision.  
+Built to eliminate visibility issues in dark UIs using a high-contrast, safety-focused color palette and a clean monospaced interface.
 
-## 🔗 Live Demo
-["animated-pro-scientific-calculator.netlify.app"]
+---
+
+## 🔗 Live Demo  
+👉 **Try it here:**  
+animated-pro-scientific-calculator.netlify.app
+
+---
 
 ## ✨ Key Features
 
-* **High-Contrast UI:** Pure white digits and safety-orange operators for 100% instant readability.
-* **Scientific Suite:** Full support for Trigonometry (sin, cos, tan), Logarithms (log, ln), Square Roots, Exponents, and Factorials.
-* **Animated "Plexus" Background:** A custom HTML5 Canvas engine that renders moving, interconnected particles behind a frosted glass interface.
-* **Tactile Response:** Smooth CSS animations and button scaling that provide immediate visual feedback on every interaction.
-* **Keyboard Synergy:** Fully mapped to your physical keyboard (Enter, Backspace, Escape, and Operators).
+- **High-Contrast UI** – Pure white digits with safety-orange operators for instant readability  
+- **Scientific Functions** – sin, cos, tan, log, ln, √, xʸ, factorial  
+- **Animated Plexus Background** – HTML5 Canvas particle network animation  
+- **Glassmorphism Design** – Frosted glass calculator panel  
+- **Tactile Interactions** – Smooth hover & click animations  
+- **Keyboard Support** – Enter, Backspace, Escape, operators supported  
+
+---
 
 ## 🧠 Technical Architecture
 
+### 🔢 Parsing Logic
+Uses a **String-to-Math Translator** that converts user-friendly symbols (`× ÷ √`) into executable JavaScript expressions while preserving operator precedence.
 
+### ⚡ Performance Design
+- Canvas rendering optimized for low CPU usage  
+- CSS Grid ensures responsive scaling across all devices  
+- No external libraries — 100% Vanilla JavaScript  
 
-### The Parsing Logic
-Instead of a simple input-output model, this app uses a **String-to-Math Translator**. It cleans user-friendly symbols (like `×` and `÷`) and converts them into JavaScript-executable logic, allowing for complex order of operations without calculation errors.
-
-### Performance Design
-* **Glassmorphism:** Uses `backdrop-filter: blur()` to separate the calculator layer from the background animation.
-* **Vector Scaling:** Built with CSS Grid to ensure it remains pixel-perfect on mobile, tablet, and desktop screens.
+---
 
 ## 🛠️ Built With
-* **Vanilla JavaScript (ES6+)** - Core logic and calculation engine.
-* **HTML5 Canvas** - Dynamic background rendering.
-* **CSS3** - Custom Grid layout and Glassmorphic effects.
-* **Google Fonts** - Roboto Mono for technical clarity.
+
+- **Vanilla JavaScript (ES6+)**
+- **HTML5 Canvas**
+- **CSS3 (Grid + Glassmorphism)**
+- **Google Fonts – Roboto Mono**
+
+---
+
+## 📸 Preview
+![Calculator Preview](preview.png)
+
+---
 
 ## 📝 License
-Distributed under the MIT License.
+MIT License © 2026 Kalyan
