@@ -5,7 +5,7 @@ Built to eliminate visibility issues in dark UIs using a high-contrast, safety-f
 
 ---
 
-![Live Demo](animated-pro-scientific-calculator.netlify.app)
+![Live Demo]([animated-pro-scientific-calculator.netlify.app](https://animated-pro-scientific-calculator.netlify.app/))
 
 ---
 
