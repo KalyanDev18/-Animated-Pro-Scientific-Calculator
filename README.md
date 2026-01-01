@@ -3,7 +3,7 @@
 A high-performance, interactive scientific calculator designed for professionals who value both aesthetics and precision. This application solves the common "visibility issue" in dark-themed tools by using a high-contrast safety color palette and a clean, monospaced interface.
 
 ## 🔗 Live Demo
-[animated-pro-scientific-calculator.netlify.app]
+["animated-pro-scientific-calculator.netlify.app"]
 
 ## ✨ Key Features
 
